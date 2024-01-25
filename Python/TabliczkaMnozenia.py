@@ -9,6 +9,8 @@ exercises = int(input())
 print("Podaj maksymalny czynnik: ", end='')
 limit = int(input())
 
+print()
+
 # mechanizm testowy
 result = 0                                   # zmienna do sumowania punktów
 for i in range (0, exercises):
@@ -24,3 +26,5 @@ for i in range (0, exercises):
 
 # napisz wynik
 print(f"Wynik: {result}/{exercises} = {result/exercises*100}%")
+if (result == exercises):
+    print("Bezbłędnie! Brawo! :D")
