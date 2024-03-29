@@ -49,7 +49,7 @@ def promptRegExp(question, regexp):
             break
     return res
 
-def test(minlimit, maxlimit, posresults, exercises, operations):
+def test(minlimit, maxlimit, posresults, answers, exercises, operations):
     result = 0
     for i in range(exercises):
         a = random.randint(minlimit, maxlimit)
@@ -57,63 +57,55 @@ def test(minlimit, maxlimit, posresults, exercises, operations):
         los = random.choice(operations)
         match los:
             case '+':
-                printOperation(i+1, a, b, '+')
-                guess = int(input())
-                try:
-                    if (guess == a+b):
-                        print('Dobrze!')
-                        result += 1
-                    else:
-                        print(f"Poprawny wynik to {a+b}")
-                except ValueError:
-                    print(f"To nie jest liczba.")
+                num1 = a
+                num2 = b
+                num3 = a+b
             case '-':
                 while (posresults) and (b > a):
                     b = random.randint(minlimit, maxlimit)
-                printOperation(i+1, a, b, '-')
-                try:
-                    guess = int(input())
-                    if (guess == a-b):
-                        print('Dobrze!')
-                        result += 1
-                    else:
-                        print(f"Poprawny wynik to {a-b}")
-                except ValueError:
-                    print(f"To nie jest liczba.")
+                num1 = a
+                num2 = b
+                num3 = a-b
             case '*':
-                printOperation(i+1, a, b, '*')
-                try:
-                    guess = int(input())
-                    if (guess == a*b):
-                        print('Dobrze!')
-                        result += 1
-                    else:
-                        print(f"Poprawny wynik to {a*b}")
-                except ValueError:
-                    print(f"To nie jest liczba.")
+                num1 = a
+                num2 = b
+                num3 = a*b
             case '/':
                 while (b == 0):
                     b = random.randint(minlimit, maxlimit)
-                printOperation(i+1, a*b, b, '/')
-                try:
-                    guess = int(input())
-                    if (guess == a):
-                        print('Dobrze!')
-                        result += 1
-                    else:
-                        print(f"Poprawny wynik to {a}")
-                except ValueError:
-                    print(f"To nie jest liczba.")
+                num1 = a*b
+                num2 = b
+                num3 = a
             case other:
                 pass
+
+        try:
+            printOperation(i+1, num1, num2, los)
+            guess = int(input())
+            if (guess == num3):
+                if (answers):
+                    print('Dobrze!')
+                result += 1
+            else:
+                if (answers):
+                    print(f"Poprawny wynik to {num3}.")
+        except ValueError:
+            if (answers):
+                print(f"To nie jest liczba. Poprawny wynik to {num3}.")
     return result
 
 # ------------------------------------------------------------------------------------
 # ustalenie warunków testu
 exercises  = promptPosInt("Podaj liczbę ćwiczeń:              ")
 maxlimit   = promptPosInt("Podaj maksymalny czynnik:          ")
+answers    = promptRegExp("Czy pokazywać odpowiedzi? [yn]:    ", r'^[yn]$')
 minlimit   = promptRegExp("Czy mają być liczby ujemne? [ynN]: ", r'^[ynN]$')
 operations = promptRegExp("Podaj listę instrukcji [+-*/]:     ", r'^[\+\-\*\/]+$')
+
+if (answers == 'y'):
+    answers = True
+else:
+    answers = False
 
 match minlimit:
     case 'y':
@@ -130,7 +122,7 @@ match minlimit:
 print()
 
 # mechanizm testowy
-result = test(minlimit, maxlimit, posresults, exercises, operations)
+result = test(minlimit, maxlimit, posresults, answers, exercises, operations)
 
 print()
 
